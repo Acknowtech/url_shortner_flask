@@ -2,11 +2,16 @@ from flask import Flask, jsonify , request
 from flask_sqlalchemy import SQLAlchemy
 import random
 from sqlalchemy.sql.elements import Null
+from flask_caching import Cache
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@localhost:3306/shortUrl'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['CACHE_TYPE']="SimpleCache"
+app.config['CACHE_DEFAULT_TIMEOUT']=3600
 db = SQLAlchemy(app)
+cache = Cache(app)
 baseURL = "https://www.demo.com/"
 @app.before_first_request
 def create_tables():
@@ -32,6 +37,12 @@ class Url_Hit_Count(db.Model):
     count = db.Column('count',db.Integer)
     created_on = db.Column('created_on',db.DateTime, server_default=db.func.now())
     updated_on = db.Column('updated_on',db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
+    def __init__(self, url_id, count):
+        self.url_id = url_id
+        self.count = count
+
+def get_count_key(short_url):
+    return datetime.now().strftime('%Y%m%d%H')+"_"+short_url
 
 def hash_generator():
     base_62_string  = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -66,10 +77,20 @@ def generate_short_url():
             new_url = Urls(long_url, short_url)
             db.session.add(new_url)
             db.session.commit()
+            cache.set(short_url,long_url,600)
+            count_key = get_count_key(short_url)
+            cache.set(count_key,0)
+            keys = cache.get('keys')
+            if keys:
+                keys.append(count_key)
+                cache.set('keys',keys)
+            else:
+                keys = [count_key]
+                cache.set('keys', keys)
             return {"status":True,
                        "data" : {
-                           "shortURL": baseURL+new_url,
-                           "urlHash": new_url
+                           "shortURL": baseURL+short_url,
+                           "urlHash": short_url
                        },
                      "message":"Short Url Generated"},201
     except Exception as e:
@@ -82,13 +103,33 @@ def get_long_url():
         if 'short_url' not in request.form :
             return {'status':False,"msg":"short_url is required"}
         short_url = request.form["short_url"].split('/')[-1]
-        print(short_url)
-        record = Urls.query.filter_by(short=short_url,expired_on=None).first()
-        if record:
+        long_url = None
+        if cache.get(short_url):
+            long_url = cache.get(short_url)
+        else :
+            record = Urls.query.filter_by(short=short_url,expired_on=None).first()
+            if record:
+                long_url = record.long
+        if long_url:
+            count_key = get_count_key(short_url)
+            hit_count = 1
+            count = cache.get(count_key)
+            if count != None:
+                count += 1
+                hit_count = count
+                cache.set(count_key, count)
+            else:
+                cache.set(count_key, hit_count)
+            keys = cache.get('keys')
+            if keys==None:
+                keys = [count_key]
+                cache.set('keys', keys)
+
             return { "status":True,
                        "data" : {
-                           "longURL": baseURL+record.long,
-                           "urlHash": record.long
+                           "longURL": baseURL+long_url,
+                           "urlHash": long_url,
+                           "lastHourHitCount":hit_count
                        },
                      "message":"Long Url Exist"
                      },200
@@ -97,6 +138,25 @@ def get_long_url():
     except Exception as e:
         print(e)
         return {'status': False, "msg": "Something Went Wrong"},413
+
+@app.route('/analytics_cron_job',methods=['GET'])
+def analytics_cron_job():
+    keys = cache.get('keys')
+    if keys:
+        print(keys)
+        cache.delete('keys')
+        for k in keys:
+            count = cache.get(k)
+            print(count)
+            if count:
+                short_url  = k.split('_')[-1]
+                record = Urls.query.filter_by(short=short_url, expired_on=None).first()
+                new_record  = Url_Hit_Count(record.id,count)
+                db.session.add(new_record)
+                db.session.commit()
+                cache.delete(k)
+
+    return {},200
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
