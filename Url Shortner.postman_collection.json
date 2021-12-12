@@ -1,0 +1,480 @@
+{
+	"info": {
+		"_postman_id": "f06ce60b-fa18-48e7-a011-d267fad5fa3b",
+		"name": "Url Shortner",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "generate_short_url",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "long_url",
+							"value": "cwededc",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{server}}/generate_short_url",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"generate_short_url"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "generate_short_url",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "long_url",
+									"value": "https://www.w3schools.com/tags/tag_meta.asp",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/generate_short_url",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"generate_short_url"
+							]
+						}
+					},
+					"status": "CREATED",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "150"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.0.2 Python/3.10.0"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 12 Dec 2021 04:24:26 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"shortURL\": \"https://www.demo.com/S13Eo0j\",\n        \"urlHash\": \"S13Eo0j\"\n    },\n    \"message\": \"Short Url Generated\",\n    \"status\": true\n}"
+				},
+				{
+					"name": "generate_short_url",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "long_url",
+									"value": "https://www.w3schools.com/tags/tag_meta.asp",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/generate_short_url",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"generate_short_url"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "56"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.0.2 Python/3.10.0"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 12 Dec 2021 05:45:41 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"msg\": \"long_url is required\",\n    \"status\": false\n}"
+				}
+			]
+		},
+		{
+			"name": "get long url from short",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "short_url",
+							"value": "https://www.demo.com/S13Eo0j",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{server}}/get_long_url",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"get_long_url"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "get long url from short",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "short_url",
+									"value": "https://www.demo.com/S13Eo0j",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/get_long_url",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"get_long_url"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "244"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.0.2 Python/3.10.0"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 12 Dec 2021 05:45:51 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"lastHourHitCount\": 1,\n        \"longURL\": \"https://www.demo.com/https://www.w3schools.com/tags/tag_meta.asp\",\n        \"urlHash\": \"https://www.w3schools.com/tags/tag_meta.asp\"\n    },\n    \"message\": \"Long Url Exist\",\n    \"status\": true\n}"
+				}
+			]
+		},
+		{
+			"name": "Cron Job For Analytics",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": null
+			},
+			"response": []
+		},
+		{
+			"name": "get analytics of short url",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{server}}/get_analytics_of_short_url?short_url=S13Eo0j",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"get_analytics_of_short_url"
+					],
+					"query": [
+						{
+							"key": "short_url",
+							"value": "S13Eo0j"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "get analytics of short url",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/get_analytics_of_short_url",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"get_analytics_of_short_url"
+							],
+							"query": [
+								{
+									"key": "short_url",
+									"value": "S13Eo0j",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "282"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.0.2 Python/3.10.0"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 12 Dec 2021 05:44:45 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"short_url_details\": {},\n        \"total_hits\": \"7\",\n        \"total_hourly_hits\": [\n            {\n                \"count\": \"6\",\n                \"time\": \"2021-12-12 09:51:50\"\n            },\n            {\n                \"count\": \"1\",\n                \"time\": \"2021-12-12 10:50:19\"\n            }\n        ]\n    },\n    \"status\": true\n}"
+				},
+				{
+					"name": "get analytics of short url",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/get_analytics_of_short_url",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"get_analytics_of_short_url"
+							],
+							"query": [
+								{
+									"key": "short_url",
+									"value": "S13Eo0j",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "57"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.0.2 Python/3.10.0"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 12 Dec 2021 05:45:03 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"msg\": \"short_url is required\",\n    \"status\": false\n}"
+				}
+			]
+		},
+		{
+			"name": "Search Terms",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "search_term",
+							"value": "python",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{server}}/search_from_keywords",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"search_from_keywords"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Search Terms",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/search_from_keywords",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"search_from_keywords"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "59"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.0.2 Python/3.10.0"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 12 Dec 2021 04:39:19 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"msg\": \"search_term is required\",\n    \"status\": false\n}"
+				},
+				{
+					"name": "Search Terms",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "search_term",
+									"value": "python",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/search_from_keywords",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"search_from_keywords"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "705"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.0.2 Python/3.10.0"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 12 Dec 2021 05:15:26 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": [\n        {\n            \"created_on\": \"2021-12-12T09:54:26\",\n            \"id\": 7,\n            \"long\": \"https://www.w3schools.com/tags/tag_meta.asp\",\n            \"meta\": \"Well organized and easy to understand Web building tutorials with lots of examples of how to use HTML, CSS, JavaScript, SQL, Python, PHP, Bootstrap, Java, XML and more.HTML, Python, CSS, SQL, JavaScript, How to, PHP, Java, C++, jQuery, Bootstrap, C#, Colors, W3.CSS, XML, MySQL, Icons, NodeJS, React, Graphics, Angular, R, AI, Git, Data Science, Code Game, Tutorials, Programming, Web Development, Training, Learning, Quiz, Courses, Lessons, References, Examples, Source code, Demos, Tips\",\n            \"short\": \"S13Eo0j\"\n        }\n    ],\n    \"status\": true\n}"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "server",
+			"value": "http://127.0.0.1:5000"
+		}
+	]
+}
